@@ -14,7 +14,8 @@ const users = [
         name: "Benjamin Schachter",
         userVars: {
           currentLift: "deadlift",
-          deadlift: 200,
+          deadlift: "200",
+          benchpress: "333",
           units: "metric",
         }
       }
@@ -23,6 +24,10 @@ const users = [
        // Some other user
      }
    ];
+
+const botVariables = {
+  liftTypes: ["deadlift", "benchpress"]
+}
     
 
 
@@ -61,11 +66,22 @@ const users = [
     _.merge(this.getUservars(currentUser), userVars);
   }
 
-  function Rs(user) {
-    this.user = user;
+  /**
+   * 
+   * @param {string} variable key to bot variable
+   * 
+   * @return {*} saved bot variable value 
+   */
+  Rs.prototype.getBotvar = function(variable) {
+    return this.botVariables[variable];
   }
 
-  let rs = new Rs(users[0]);
+  function Rs(user, botVariables) {
+    this.user = user;
+    this.botVariables = botVariables;
+  }
+
+  let rs = new Rs(users[0], botVariables);
 /**
  * =========================================================
  * 
@@ -105,6 +121,18 @@ function currentMaxLift() {
   // Dumby data should return 200
   return maxLift;
 };
+
+/**
+ * Return all user recorded maxlifts
+ * 
+ * @ return {string} of all user inputted maxLifts
+ */
+function getAllMaxLifts() {
+  const lifts = rs.getBotvar("liftTypes");
+  const userVars = rs.getUservars(rs.currentUser());
+
+  return lifts.map(lift => lift + " " + userVars[lift] + " \n").join("");
+}
 
 /**
  * =========================================================
@@ -228,35 +256,4 @@ function normalizeUnits() {
   return measurementTypes[userVars.units]
 }
 
-
-/**
- * =========================================================
- * 
- *                    LEGACY SCRIPT
- * 
- * =========================================================
- */
-
-
-// + deadlift
-// * <get deadlift> != undefined => your current deadlift is <get deadlift> to change your max lift type: set deadlift <your max>
-
-
-// + set * *
-// - <set <star1>=<star2>> your <star1> is now <get <star1>>
-
-
-// + benchpress *
-// - <set benchpress=<star>> Your bench press is <get benchpress> <call> normalizeUnits</call> <send> ^buttons("calculator", "select")
-
-// + setMax
-// - Your deadlift is <get deadlift> <call> normalizeUnits</call>
-
-// + calculator
-// - {topic=calculator} {@ lift type}
-
-// + back
-// - {topic=default} {@ redirect}
-
-
-  console.log(calculateLifts());
+console.log(getAllMaxLifts());
