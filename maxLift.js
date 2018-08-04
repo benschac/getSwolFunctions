@@ -28,6 +28,7 @@ function setMaxLift() {
   rs.setUservar(rs.currentUser(), currentLift, String(arguments[0]));
   
   // Call normalizeUnits after this call
+  // Todo -- remove this shit. cruft
   return "Your new " + currentLift + " is " + userVars[currentLift];
 }
 

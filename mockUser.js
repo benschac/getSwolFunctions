@@ -13,8 +13,9 @@ const users = [
         name: "Benjamin Schachter",
         userVars: {
           currentLift: "deadlift",
-          deadlift: "200",
+          deadlift: "45",
           benchpress: "333",
+          hangclean: "100",
           units: "metric",
           gender: "male"
         }
@@ -25,8 +26,8 @@ const users = [
         name: "Rebecca Cohen",
         userVars: {
           currentLift: "deadlift",
-          deadlift: "100",
-          benchpress: "40",
+          deadlift: "45",
+          benchpress: "55",
           units: "metric",
           gender: "female"
         }

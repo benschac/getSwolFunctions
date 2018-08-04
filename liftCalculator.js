@@ -1,4 +1,5 @@
 const rs = require("./mockUser");
+const setLiftsToConvertedValue = require("./weightConverter").setLiftsToConvertedValue;
 
 /**
  * =========================================================
@@ -18,9 +19,10 @@ function calculateLifts () {
   var userVars = rs.getUservars(rs.currentUser());
   var liftType = userVars.currentLift;
   var maxLift = userVars[liftType];
-  // Hardcoded to male users barbell weight in KG for the moment.
-  // Todo -- create a conversion function for M|F & KG | LBS
-  var barBellWeight = 20;
+  const barBellConfiguration = {"male": {"metric": 20, "imperial": 44}, "female": {"metric": 15, "imperial": 33}};
+  
+  barBellWeight = barBellConfiguration[userVars.gender][userVars.units];
+  
   // Todo -- this can be an optional range.  Remove hardcode
   let commonLiftPercentage    = [.30, .35, .40, .45, .50, .55, .60, .65, .70, .75, .80, .85, .90, .95];
   let calculatedLiftPercents  = commonLiftPercentage.map(liftPercentage);
@@ -51,25 +53,26 @@ function calculateLifts () {
      */
     function getPlates(liftWeight) {
       var plateWeightSingleSide = (liftWeight - barBellWeight) / 2;
+      let plates;
 
-      // Hard Coded KG Plates.
-      var plates = [{red: 25}, {"blue": 20}, {yellow: 15}, {green: 10}, {white: 5}, {small_red: 2.5}, {small_blue: 2}, {small_yellow: 1.5}, {small_green: 1}, {small_white: .5}];
+      if (userVars.units === "metric") {
+        plates = [{"Large Red": 25}, {"Large Blue": 20}, {"Large Yellow": 15}, {"Large Green": 10}, {"Large White": 5}, {"Small Red": 2.5}, {"Small Blue": 2}, {"Small Yellow": 1.5}, {"Small Green": 1}, {"Small White": .5}];
+      } else {
+        plates = [{"45": 45}, {"35": 35}, {"25": 25}, {"10": 10}, {"5": 5}, {"2.5": 2.5}, {"1.25": 1.25}];
+      }
 
       var plateIndex = 0;
       var platesToLoad = [];
       var formattedPlateCount = [];
         
       while(plateWeightSingleSide >= .25) {
-        var convertPlate = {red: "Large Red", blue: "Large Blue", yellow: "Large Yellow", green: "Large Green", white: "Large White", small_red: "Small Red", small_blue: "Small Blue", small_yellow: "Small Yellow", small_green: "Small Green", small_white: "Small White"};
-
-        // There's a better way to key for this value.
         var plateType   = Object.keys(plates[plateIndex])[0];
         var plateWeight = plates[plateIndex][plateType];
         
         if((plateWeightSingleSide - plateWeight) >= 0) {
           platesToLoad.push(plateType);
           plateWeightSingleSide -= plateWeight;
-        } else if (plateWeightSingleSide <= .25) {
+        } else if (plateWeightSingleSide <= .5) {
           break;
         } else {
           Math.min(plateIndex++, plates.length);
@@ -82,7 +85,11 @@ function calculateLifts () {
       }, {});
 
       for(let plate in plateCount) {
-        formattedPlateCount.push((plateCount[plate] + " " +  convertPlate[plate]) + (plateCount[plate] > 1 ? "s" : ""));
+        formattedPlateCount.push((plateCount[plate] + " " +  plate) + (plateCount[plate] > 1 ? "s" : ""));
+      }
+
+      if(!formattedPlateCount.length) {
+        formattedPlateCount.push("<= Bar Weight")
       }
 
       return formattedPlateCount.join(', ');
@@ -101,11 +108,12 @@ function calculateLifts () {
 
     for (let i = 0; i < commonLiftPercentage.length; i++) {
       readableLifts.push(
-        convertDecimalToStringPercent(commonLiftPercentage[i]) + " " + calculatedLiftPercents[i] + "kg " + " " + platesToLoad[i] + " \n"
+        convertDecimalToStringPercent(commonLiftPercentage[i]) + " " + calculatedLiftPercents[i] +  (userVars.units === "metric" ? "kgs " : "lbs ") + " " + platesToLoad[i] + " \n"
       );
     }
   
     return readableLifts.join(' ');
 }
 
+console.log(rs.user);
 console.log(calculateLifts());
