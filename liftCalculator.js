@@ -119,6 +119,119 @@ function calculateLifts () {
   return readableLifts.join(' ');
 }
 
+
+function calcLiftsURLencoded() {
+  var userVars = rs.getUservars(rs.currentUser());
+  var liftType = userVars.currentLift;
+  var maxLift = userVars[liftType];
+  const barBellConfiguration = {"male": {"metric": 20, "imperial": 44}, "female": {"metric": 15, "imperial": 33}};
+  const minimumRemainingWeightConfiguration = {"metric": .5, "imperial": 1.5};
+  const minimumRemainingWeight = minimumRemainingWeightConfiguration[userVars.units];
+
+  barBellWeight = barBellConfiguration[userVars.gender][userVars.units]
+  // Todo -- this can be an optional range.  Remove hardcode
+  let commonLiftPercentage    = [.30, .35, .40, .45, .50, .55, .60, .65, .70, .75, .80, .85, .90, .95];
+  let calculatedLiftPercents  = commonLiftPercentage.map(liftPercentage);
+  let platesToLoad            = calculatedLiftPercents.map(getPlates);
+
+// ugly -- not I have some weird bug in my mapping function i need to fix l8r
+  var responseObject = {units: userVars.units, liftType: userVars.currentLift, weightConfigurations: []};
+
+  function liftPercentage(percent) {
+    return Math.round((maxLift * percent) * 10 ) / 10;
+  }
+  
+      /**
+   * Calculates the plates needed for calculated lift
+   * 
+   * @param {number} liftWeight
+   * 
+   * @return {string} of colors for each side of barbell plates.
+   */
+  function getPlates(liftWeight) {
+    var plateWeightSingleSide = (liftWeight - barBellWeight) / 2;
+    let plates;
+
+    if (userVars.units === "metric") {
+      plates = [{"Large Red": 25}, {"Large Blue": 20}, {"Large Yellow": 15}, {"Large Green": 10}, {"Large White": 5}, {"Small Red": 2.5}, {"Small Blue": 2}, {"Small Yellow": 1.5}, {"Small Green": 1}, {"Small White": .5}];
+    } else {
+      plates = [{"45": 45}, {"35": 35}, {"25": 25}, {"10": 10}, {"5": 5}, {"2.5": 2.5}, {"1.25": 1.25}];
+    }
+
+    var plateIndex = 0;
+    var platesToLoad = [];
+    var formattedPlateCount = [];
+      
+    while(plateWeightSingleSide >= .25) {
+      var plateType   = Object.keys(plates[plateIndex]);
+      var plateWeight = plates[plateIndex][plateType];
+      
+      if((plateWeightSingleSide - plateWeight) >= 0) {
+        platesToLoad.push(plateType);
+        plateWeightSingleSide -= plateWeight;
+      } else if (plateWeightSingleSide <= minimumRemainingWeight) {
+        break;
+      } else {
+        Math.min(plateIndex++, plates.length);
+      }
+    }
+    const respObj = {
+      units: "metric",
+      weightConfigurations: [
+        {
+          percent: .3,
+          amount: 24.5,
+          plates: [
+            {"Large Red": 2},
+            {"Large White": 1},
+            {"Small Green": 1},
+          ]
+        }
+      ]
+    }
+    
+    let plateCount = platesToLoad.reduce((prev, curr) => {
+      prev[curr] ? prev[curr] += 1 : prev[curr] = 1;
+      return prev;
+    }, {});
+
+    for(let plate in plateCount) {
+      formattedPlateCount.push({[plate]: plateCount[plate]});
+    }
+
+    if(!formattedPlateCount.length) {
+      formattedPlateCount.push("<= Bar Weight")
+    }
+
+    return formattedPlateCount;
+  }
+  
+      /**
+   * 
+   * @param {float} decimal to convert
+   * 
+   * @return {string} formatted percent string
+   */
+  function convertDecimalToStringPercent(decimal) {
+    var string = Math.floor((decimal * 100));
+    return string.toString()
+  }
+
+  for (let i = 0; i < commonLiftPercentage.length; i++) {
+    responseObject.weightConfigurations.push(
+      {
+        [convertDecimalToStringPercent(commonLiftPercentage[i])]: 
+          {
+            amount: calculatedLiftPercents[i],
+            plates: platesToLoad[i]
+          }
+      }
+    );
+  }
+
+  return encodeURI(JSON.stringify(responseObject));
+}
+
 // setLiftsToConvertedValue("imperial")
-console.log(rs.user);
-console.log(calculateLifts());
+// console.log(rs.user);
+console.log(calcLiftsURLencoded());

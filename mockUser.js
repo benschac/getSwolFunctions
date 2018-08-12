@@ -1,5 +1,21 @@
 const _ = require('lodash');
 
+
+const respObj = {
+  units: "metric",
+  weightConfigurations: [
+    {
+      percent: .3,
+      amount: 24.5,
+      plates: [
+        {"Large Red": 2},
+        {"Large White": 1},
+        {"Small Green": 1},
+      ]
+    }
+  ]
+}
+
 /**
  * =========================================================
  * 
@@ -16,7 +32,7 @@ const users = [
           deadlift: "155",
           benchpress: "333",
           hangclean: "100",
-          units: "imperial",
+          units: "metric",
           gender: "male"
         }
       }
