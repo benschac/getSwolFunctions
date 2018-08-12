@@ -8,32 +8,23 @@ const rs = require("./mockUser");
  * =========================================================
  */
 
-/**
- * 
- *      LEGACY TO BE REMOVED
- * 
- * 
- * Set currentLift to user input argument value
- * 
- * @param {string} maxLift value to save to individual user instance.
- * 
- * @return {string} Value of new liftType and maxLift
- * 
- * 
- *      LEGACY TO BE REMOVED
- */
-function setMaxLift() {
-  let userVars = rs.getUservars(rs.currentUser());
-  let currentLift = userVars.currentLift;
-  rs.setUservar(rs.currentUser(), currentLift, String(arguments[0]));
-  
-  // Call normalizeUnits after this call
-  // Todo -- remove this shit. cruft
-  return "Your new " + currentLift + " is " + userVars[currentLift];
-}
+
+ /**
+  * Get the user specified unit to present to the user
+  * 
+  * @return {string} kilos|pounds
+  */
+ function getUserUnit() {
+  const userVars = rs.getUservars(rs.currentUser());
+  const units = userVars.units
+
+  return units === "metric" ? "Kilos" : "Pounds";
+ }
+
 
 /**
  * TODO -- TEST THIS FUNCTION! ISN'T IN THE BOT YET
+ *
  * Record maxlifts with error handling
  * 
  * @param {string} userMaxLiftInput the user inputted value
@@ -45,14 +36,12 @@ function recordMaxLift() {
   let currentLift = userVars.currentLift;
   // NOTE CHANGE TO ARGS WHEN PLACING IN BOT
   let userMaxLiftInput = arguments[0];
-
-  if (typeof Number(userMaxLiftInput) !== "number") {
-    rs.reply(rs.currentUser(), "back")
-    return "Sorry, I need a number! Just enter something like, 100. Try again!"
+  if (Number(userMaxLiftInput) > 1) {
+    return "Sorry, I need a positive number! Just enter something like, 100. Try again!"
+  } else {
+    rs.setUservar(rs.currentUser(), currentLift, userMaxLiftInput);
+    return "hit accepted user input"
   }
-
-  rs.setUservar(rs.currentUser(), currentLift, userMaxLiftInput);
-  rs.reply(rs.currentUser(), "continue");
 }
    
 /**

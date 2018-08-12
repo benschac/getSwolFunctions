@@ -13,10 +13,10 @@ const users = [
         name: "Benjamin Schachter",
         userVars: {
           currentLift: "deadlift",
-          deadlift: "45",
+          deadlift: "155",
           benchpress: "333",
           hangclean: "100",
-          units: "metric",
+          units: "imperial",
           gender: "male"
         }
       }
@@ -26,7 +26,7 @@ const users = [
         name: "Rebecca Cohen",
         userVars: {
           currentLift: "deadlift",
-          deadlift: "45",
+          deadlift: "100",
           benchpress: "55",
           units: "metric",
           gender: "female"
