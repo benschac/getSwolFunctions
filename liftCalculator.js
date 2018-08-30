@@ -175,20 +175,6 @@ function calcLiftsURLencoded() {
         Math.min(plateIndex++, plates.length);
       }
     }
-    const respObj = {
-      units: "metric",
-      weightConfigurations: [
-        {
-          percent: .3,
-          amount: 24.5,
-          plates: [
-            {"Large Red": 2},
-            {"Large White": 1},
-            {"Small Green": 1},
-          ]
-        }
-      ]
-    }
     
     let plateCount = platesToLoad.reduce((prev, curr) => {
       prev[curr] ? prev[curr] += 1 : prev[curr] = 1;
@@ -214,21 +200,19 @@ function calcLiftsURLencoded() {
    */
   function convertDecimalToStringPercent(decimal) {
     var string = Math.floor((decimal * 100));
-    return string.toString()
+    return string.toString() + "%";
   }
 
   for (let i = 0; i < commonLiftPercentage.length; i++) {
     responseObject.weightConfigurations.push(
       {
-        [convertDecimalToStringPercent(commonLiftPercentage[i])]: 
-          {
-            amount: calculatedLiftPercents[i],
-            plates: platesToLoad[i]
-          }
+        percent: convertDecimalToStringPercent(commonLiftPercentage[i]),
+        amount: calculatedLiftPercents[i],
+        plates: platesToLoad[i]
       }
     );
   }
-
+  console.log(responseObject);
   return encodeURI(JSON.stringify(responseObject));
 }
 

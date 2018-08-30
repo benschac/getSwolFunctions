@@ -22,6 +22,25 @@ const rs = require("./mockUser");
  }
 
 
+
+ /**
+  * Checks if the inputted value is a number type. Directs user to change value
+  * If not.
+  * 
+  * @return {reply|void} 
+  */
+ function checkMaxLiftValue() {
+  const userVars = rs.getUservars(rs.currentUser());
+  const currentLift = userVars.currentLift;
+
+  if (Number(userVars[currentLift])) {
+    return rs.reply(rs.currentUser(),'confirm');
+  } else {
+    return rs.reply(rs.currentUser(),'tryagainmaxliftvalue');
+  }
+ }
+
+
 /**
  * TODO -- TEST THIS FUNCTION! ISN'T IN THE BOT YET
  *
