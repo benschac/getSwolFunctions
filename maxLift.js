@@ -1,3 +1,4 @@
+const _  = require('lodash');
 const rs = require("./mockUser");
 
 /**
@@ -21,6 +22,46 @@ const rs = require("./mockUser");
   return units === "metric" ? "Kilos" : "Pounds";
  }
 
+
+//  /**
+//   * Convert previous maxLifts to new values based off previous entries
+//   */
+ function convertMaxLifts() {
+   const lifts = ["deadlift", "benchpress", "hangclean", "backsquat", "frontsquat", "overheadsquat", "snatch", "clean and jerk", "overhead press", "hangclean"];
+
+
+   const toKilos = 0.453592;
+   const toPounds = 2.20462;
+
+   const userVars = rs.getUservars(rs.currentUser());
+   const units = userVars.units;
+   const convert = units === 'metric' ? toPounds : toKilos;
+
+   lifts.forEach(lift => {
+     if(_.get(userVars, [lift], false)) {
+      rs.setUservar(rs.currentUser(), lift, Math.round(convert * userVars[lift]));
+     }
+   })
+
+   console.log(rs.getUservars(rs.currentUser()));
+   rs.reply(rs.currentUser(), 'allmaxlifts');
+ }
+
+
+
+ /**
+  * If user doesn't know there maxes give a generic base amount for the avg lifter
+  * 
+  * @return {void} call get all max lifts
+  */
+ function baseLineLifts() {
+  const lifts = ["deadlift", "benchpress", "hangclean", "backsquat", "frontsquat", "overheadsquat", "snatch", "clean and jerk", "overhead press", "hangclean"];
+  const baseLineLiftsMale = {};
+  const baseLineLiftsFelmale = {};
+  const userVars = rs.getUservars(rs.currentUser());
+
+
+ }
 
 
  /**
@@ -91,4 +132,4 @@ function getAllMaxLifts() {
   return lifts.map(lift => lift + " " + userVars[lift] + " \n").join("");
 }
 
-console.log(getAllMaxLifts() + "\n" + currentMaxLift());
+console.log(convertMaxLifts());

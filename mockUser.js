@@ -32,7 +32,7 @@ const users = [
           deadlift: "155",
           benchpress: "333",
           hangclean: "100",
-          units: "metric",
+          units: "imperial",
           gender: "male"
         }
       }
@@ -52,7 +52,17 @@ const users = [
    ];
 
 const botVariables = {
-  liftTypes: ["deadlift", "benchpress"]
+  liftTypes: [
+    "deadlift",
+    "benchpress",
+    "backsquat",
+    "frontsquat",
+    "overheadsquat",
+    "snatch",
+    "clean and jerk",
+    "overhead press",
+    "hangclean"
+  ]
 }
     
 
@@ -98,7 +108,7 @@ const botVariables = {
    * @param {string} trigger 
    */
   Rs.prototype.reply = function(currentUser, trigger) {
-    console.log("The trigger executed was" + trigger);
+    console.log("The " + currentUser + " trigger executed was" + trigger);
     return 1;
   }
 
