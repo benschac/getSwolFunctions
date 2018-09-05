@@ -32,6 +32,4 @@ function userInputWeightConversion() {
    : userInput + 'kg to ' + String(Math.round(botVars.toPounds * userInput)) + 'lb'
 };
 
-console.log(userInputWeightConversion('heya'));
-
 module.exports = userInputWeightConversion;

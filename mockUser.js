@@ -38,11 +38,17 @@ const users = [
         name: "Benjamin Schachter",
         userVars: {
           currentLift: "deadlift",
-          deadlift: "155",
-          benchpress: "333",
-          hangclean: "100",
-          units: "imperial",
-          gender: "male"
+          "deadlift": "221",
+          "benchpress": "185",
+          "backsquat": "195",
+          "frontsquat": "160",
+          "overheadsquat": "100",
+          "snatch": "100",
+          "clean and jerk": "100",
+          "overhead press": "100",
+          "hangclean": "100",
+          "units": "imperial",
+          "gender": "male"
         }
       }
      },
@@ -60,6 +66,9 @@ const users = [
      }
    ];
 
+/**
+ * User inputs 
+ */
 const botUserVariables = {
   liftTypes: [
     "deadlift",
@@ -74,11 +83,14 @@ const botUserVariables = {
   ]
 }
 
+/**
+ * Bot wide variables
+ */
 const botBrainVars = {
  toKilos: 0.453592,
  toPounds: 2.20462,
  // LOOKING TO REMOVE
- lifts: ['deadlift', 'benchpress', 'backsquat', 'frontsquat', 'overheadsquat', 'snatch', 'clean and jerk', 'overhead press', 'hangclean'],
+ lifts: 'deadlift, benchpress, backsquat, frontsquat, overheadsquat, snatch, clean and jerk, overhead press, hangclean',
  unitShrt: {metric: 'kgs', imperial: 'lbs'},
  unitLng: {metric: 'kilos', imperial: 'pounds'}
 }
@@ -150,7 +162,6 @@ const botBrainVars = {
 
   function Rs(user, botUserVariables) {
     this.user = user;
-    this.botUserVariables = botUserVariables;
   }
 
   function Bot() {
@@ -159,5 +170,5 @@ const botBrainVars = {
 
 
   /** Export a new instantiated user to mock with our local functions */
-  const rs = new Rs(users[0], botUserVariables);
+  const rs = new Rs(users[0]);
   module.exports = rs;
