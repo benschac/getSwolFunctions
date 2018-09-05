@@ -1,6 +1,15 @@
 const _ = require('lodash');
 
 
+/**
+ * 
+ * =========================================================
+ * 
+ *                      NOT IN USE
+ * 
+ * =========================================================
+ * 
+ */
 const respObj = {
   units: "metric",
   weightConfigurations: [
@@ -51,7 +60,7 @@ const users = [
      }
    ];
 
-const botVariables = {
+const botUserVariables = {
   liftTypes: [
     "deadlift",
     "benchpress",
@@ -63,6 +72,15 @@ const botVariables = {
     "overhead press",
     "hangclean"
   ]
+}
+
+const botBrainVars = {
+ toKilos: 0.453592,
+ toPounds: 2.20462,
+ // LOOKING TO REMOVE
+ lifts: ['deadlift', 'benchpress', 'backsquat', 'frontsquat', 'overheadsquat', 'snatch', 'clean and jerk', 'overhead press', 'hangclean'],
+ unitShrt: {metric: 'kgs', imperial: 'lbs'},
+ unitLng: {metric: 'kilos', imperial: 'pounds'}
 }
     
 
@@ -88,6 +106,15 @@ const botVariables = {
   }
 
   /**
+   * Return botBrain vars
+   * 
+   * @return {object} vars (key|value)
+   */
+  Rs.prototype.getBotvars = function () {
+    return botBrainVars;
+  }
+
+  /**
    * 
    * @param {string} currentUser 
    * @param {string} name 
@@ -108,8 +135,7 @@ const botVariables = {
    * @param {string} trigger 
    */
   Rs.prototype.reply = function(currentUser, trigger) {
-    console.log("The " + currentUser + " trigger executed was" + trigger);
-    return 1;
+    return trigger;
   }
 
   /**
@@ -119,15 +145,19 @@ const botVariables = {
    * @return {*} saved bot variable value 
    */
   Rs.prototype.getBotvar = function(variable) {
-    return this.botVariables[variable];
+    return this.botUserVariables[variable];
   }
 
-  function Rs(user, botVariables) {
+  function Rs(user, botUserVariables) {
     this.user = user;
-    this.botVariables = botVariables;
+    this.botUserVariables = botUserVariables;
+  }
+
+  function Bot() {
+    this.users = {user :new Rs(users[0], botUserVariables)};
   }
 
 
   /** Export a new instantiated user to mock with our local functions */
-  const rs = new Rs(users[0], botVariables);
+  const rs = new Rs(users[0], botUserVariables);
   module.exports = rs;

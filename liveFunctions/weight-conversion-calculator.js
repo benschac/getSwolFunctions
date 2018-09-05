@@ -11,8 +11,10 @@ function convertUserValue() {
 
   const userVars = rs.getUservars(rs.currentUser());
 
+  console.log(toConvert);
   if (!Number(toConvert)) {
-    rs.reply(rs.currentUser(), 'tryconversionagain');
+    console.log('fuck');
+    return rs.reply(rs.currentUser(), 'invalidinput');
   }
 
   if (userVars.units === "metric") {
@@ -23,3 +25,7 @@ function convertUserValue() {
 
   return convert;
 }
+
+console.log(convertUserValue('heya'));
+
+module.exports = convertUserValue;

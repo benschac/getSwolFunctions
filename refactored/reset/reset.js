@@ -1,8 +1,9 @@
+const rs = require('../../mockUser');
 
 /**
  * Reset all users botUser Variables
  * 
- * return {string} confirmation
+ * @return {string} confirmation
  */
 function resetBotUserVars() {
   const userVars = rs.getUservars(rs.currentUser());
@@ -13,4 +14,4 @@ function resetBotUserVars() {
   return 'your inputted data has been reset, this cannot be undone'
 };
 
-
+module.exports = resetBotUserVars;
