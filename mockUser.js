@@ -1,30 +1,5 @@
 const _ = require('lodash');
 
-
-/**
- * 
- * =========================================================
- * 
- *                      NOT IN USE
- * 
- * =========================================================
- * 
- */
-const respObj = {
-  units: "metric",
-  weightConfigurations: [
-    {
-      percent: .3,
-      amount: 24.5,
-      plates: [
-        {"Large Red": 2},
-        {"Large White": 1},
-        {"Small Green": 1},
-      ]
-    }
-  ]
-}
-
 /**
  * =========================================================
  * 
@@ -57,8 +32,17 @@ const users = [
         name: "Rebecca Cohen",
         userVars: {
           currentLift: "deadlift",
-          deadlift: "100",
-          benchpress: "55",
+          "deadlift": "221",
+          "benchpress": "185",
+          "backsquat": "195",
+          "frontsquat": "160",
+          "overheadsquat": "100",
+          "snatch": "100",
+          "clean and jerk": "100",
+          "overhead press": "100",
+          "hangclean": "100",
+          "units": "imperial",
+          "gender": "male",
           units: "metric",
           gender: "female"
         }
@@ -89,7 +73,6 @@ const botUserVariables = {
 const botBrainVars = {
  toKilos: 0.453592,
  toPounds: 2.20462,
- // LOOKING TO REMOVE
  lifts: 'deadlift, benchpress, backsquat, frontsquat, overheadsquat, snatch, clean and jerk, overhead press, hangclean',
  unitShrt: {metric: 'kgs', imperial: 'lbs'},
  unitLng: {metric: 'kilos', imperial: 'pounds'}

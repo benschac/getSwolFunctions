@@ -1,13 +1,29 @@
 const rs                        = require('../../mockUser'),
-      convertAllMaxLifts        = require('./index.js'),
-      userInputWeightConversion = require('../userInputWeightConversion')
+      convertAllMaxLifts        = require('./index.js')
     ;
 
 
-describe('converAllMaxLifts trigger', () => {
-  it('should be maxlifts', () => {
-    expect(convertAllMaxLifts()).toBe('maxlifts');
-  });
+describe('convertAllMaxLifts', () => {
+  
+  
+  // beforeAll(() => {
+    it('should trigger maxlifts', () => {
+      expect(convertAllMaxLifts()).toBe('maxlifts');
+    // });
+  })
+
+
+  // need to work on this
+  // it('should flip unit', () => {
+  //   expect(rs.getUservars(rs.currentUser()).units).not.toBe(unitsBefore);
+  // });
+
+
+
+});
+
+describe('convertAllMaxLifts from kgs -> lbs', () => {
+  
 });
 
 
