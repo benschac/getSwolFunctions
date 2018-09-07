@@ -13,29 +13,20 @@ function currentUnitMeasurement() {
   /**
    * Start RiveScript | Boiler Plate
    */
-  const type      = isDev ? arguments[0] : args[0],
+  const type      = arguments[0],
         cu        = rs.currentUser(),
-        botVars   = rs.getBotvars(),
         userVars  = rs.getUservars(cu)
         ;
   
-  if(!Number(userInput)) {
-    return rs.reply(rs.currentUser(), 'invalidinput');
-  }
-
-  if (userInput <= 0) {
-    return rs.reply(rs.currentUser(), 'invalidinput');
-  }
   /**
    * End RiveScript | Boiler Plate
    */  
-
-   const botVarsObject = JSON.parse(botVars);
-
+  
+    
    if(type === 'short') {
-     return botVarsObject['unitShrt'][userVars.units];
+     return userVars.units === 'metric' ? 'kgs' : 'lbs';
    } else {
-     return botVarsObject['unitLng'][userVars.units];
+     return userVars.units === 'metric' ? 'kilos' : 'pounds';
    }
 }
 

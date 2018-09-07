@@ -1,26 +1,29 @@
-const rs = require('../../mockUser');
-const isDev = true;
+const rs = require('../../mockUser'),
+      _  = require('lodash')
+    ;
 
 /**
  * Will take opposite unit measurement and convert user inputted value;
  * 
- * @param {string} the value to convert
+ * @param (optional) {string} the value to convert
+ * 
+ * @return {string} converted value
  */
-function userInputWeightConversion() {
+function weightConversion() {
   /**
    * Start RiveScript | Boiler Plate
    */
-  const userInput = isDev ? arguments[0] : args[0],
-        cu        = rs.currentUser(),
+  const cu        = rs.currentUser(),
         botVars   = rs.getBotvars(),
-        userVars  = rs.getUservars(cu)
+        userVars  = rs.getUservars(cu),
+        toConvert = _.get(arguments,'0', false) || userVars[userVars.currentLift]
         ;
   
-  if(!Number(userInput)) {
+  if(!Number(toConvert)) {
     return rs.reply(rs.currentUser(), 'invalidinput');
   }
 
-  if (userInput <= 0) {
+  if (toConvert <= 0) {
     return rs.reply(rs.currentUser(), 'invalidinput');
   }
   /**
@@ -28,8 +31,8 @@ function userInputWeightConversion() {
    */
 
    return userVars.units === 'imperial'
-   ? userInput + 'lb to ' + String(Math.round(botVars.toKilos * userInput)) + 'kg'
-   : userInput + 'kg to ' + String(Math.round(botVars.toPounds * userInput)) + 'lb'
+   ? `${String(Math.round(botVars.toKilos * toConvert))}kg`
+   : `${String(Math.round(botVars.toPounds * toConvert))}lb`
 };
 
-module.exports = userInputWeightConversion;
+module.exports = weightConversion;

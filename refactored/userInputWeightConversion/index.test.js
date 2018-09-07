@@ -21,7 +21,7 @@ describe('default state', () => {
   });
 
   it('should be kg -> lbs if not set', () => {
-    expect(userInputWeightConversionCalculator('45')).toBe('45kg to 99lb');
+    expect(userInputWeightConversionCalculator('45')).toBe('99lb');
   })
 });
 
@@ -33,9 +33,9 @@ describe('user input weight conversion kg -> lbs', () => {
   });
 
   it('should convert whole number kilograms to pounds', () => {
-    expect(userInputWeightConversionCalculator('45')).toBe('45kg to 99lb');
-    expect(userInputWeightConversionCalculator('100')).toBe('100kg to 220lb');
-    expect(userInputWeightConversionCalculator('75')).toBe('75kg to 165lb');
+    expect(userInputWeightConversionCalculator('45')).toBe('99lb');
+    expect(userInputWeightConversionCalculator('100')).toBe('220lb');
+    expect(userInputWeightConversionCalculator('75')).toBe('165lb');
   });
 
   afterAll(() => {
@@ -54,8 +54,13 @@ describe('user input weight conversion lbs -> kgs', () => {
 
 
   it('should convert whole number pounds to kilos', () => {
-    expect(userInputWeightConversionCalculator('100')).toBe('100lb to 45kg');
-    expect(userInputWeightConversionCalculator('200')).toBe('200lb to 91kg');
-    expect(userInputWeightConversionCalculator('245')).toBe('245lb to 111kg');
+    expect(userInputWeightConversionCalculator('100')).toBe('45kg');
+    expect(userInputWeightConversionCalculator('200')).toBe('91kg');
+    expect(userInputWeightConversionCalculator('221')).toBe('100kg');
+    expect(userInputWeightConversionCalculator('245')).toBe('111kg');
   });
 });
+
+describe('can use botUser variable currentLift to convert units', () => {
+  expect(userInputWeightConversionCalculator()).toBe('100kg');
+})
