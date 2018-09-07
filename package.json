@@ -13,6 +13,8 @@
     "lodash": "^4.17.10"
   },
   "devDependencies": {
-    "jest": "^23.5.0"
+    "i": "^0.3.6",
+    "jest": "^23.5.0",
+    "node-inspector": "^1.1.2"
   }
 }

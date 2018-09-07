@@ -22,7 +22,7 @@ const users = [
           "clean and jerk": "100",
           "overhead press": "100",
           "hangclean": "100",
-          "units": "imperial",
+          "units": "metric",
           "gender": "male"
         }
       }

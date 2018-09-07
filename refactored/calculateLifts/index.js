@@ -19,32 +19,42 @@ const rs = require('../../mockUser'),
  * Get Common Lift Percentages from MaxLift that was set by the user
  */
 function calculateLifts() {
-  /**
+
+    /**
    * Start RiveScript | Boiler Plate
    */
-  const cu                     = rs.currentUser(),
-        botVars                = rs.getBotvars(),
-        userVars               = rs.getUservars(cu),
-      
+  const cu                       = rs.currentUser(),
+        userVars                 = rs.getUservars(cu),
   /**
    * End RiveScript | Boiler Plate
-   */
-  
-        currentLift            = userVars.currentLift,
-        maxLift                = userVars[currentLift],
-        barBellConfiguration   = botVars.barBellConfig,
-        minimumRemainingConfig = {"metric": .5, "imperial": 1.5},
-        minimumRemainingWeight = minimumRemainingConfig[userVars.units]
+   */  
+        liftType                 = userVars.currentLift,
+        maxLift                  = userVars[liftType],
+        barBellConfiguration     = {"male": {"metric": 20, "imperial": 44}, "female": {"metric": 15, "imperial": 33}},
+        minRemainingWeightConfig = {"metric": .5, "imperial": 1.5},
+        minimumRemainingWeight   = minRemainingWeightConfig[userVars.units],
+        barBellWeight            = barBellConfiguration[userVars.gender][userVars.units],
+        metricPlates             = [{"Large Red": 25}, {"Large Blue": 20}, {"Large Yellow": 15}, {"Large Green": 10}, {"Large White": 5}, {"Small Red": 2.5}, {"Small Blue": 2}, {"Small Yellow": 1.5}, {"Small Green": 1}, {"Small White": .5}],
+        imperialPlates           = [{"45": 45}, {"35": 35}, {"25": 25}, {"10": 10}, {"5": 5}, {"2.5": 2.5}, {"1.25": 1.25}]
       ;
-
-    let barBellWeight          = barBellConfiguration[userVars.gender][userVars.units]
-        commonLiftPercentage   = [.30, .35, .40, .45, .50, .55, .60, .65, .70, .75, .80, .85, .90, .95],
-        calculatedLiftPercents = commonLiftPercentage.map(percent => (Math.round((maxLift * percent) * 10 ) / 10)),
-        platesToLoad           = calculatedLiftPercents.map(getPlates)
+  
+  let   commonLiftPercentage     = [.30, .35, .40, .45, .50, .55, .60, .65, .70, .75, .80, .85, .90, .95],
+        calculatedLiftPercents   = commonLiftPercentage.map(percent => (Math.round((maxLift * percent) * 10 ) / 10)),
+        platesToLoad             = calculatedLiftPercents.map(getPlates)
       ;
 
 // ugly -- not I have some weird bug in my mapping function i need to fix l8r
-  var readableLifts = [];
+  //var readableLifts = [];
+
+  /**
+   * Append 's' if needed
+   * 
+   * @param {number} count 
+   */
+  function pluralize(count) {
+    return (count > 1 ? "s" : "");
+  }
+
   
   /**
    * Calculates the plates needed for calculated lift
@@ -54,27 +64,24 @@ function calculateLifts() {
    * @return {string} of colors for each side of barbell plates.
    */
   function getPlates(liftWeight) {
-    let plateWeightSingleSide = (liftWeight - barBellWeight) / 2;
-    let plates;
+    const plates           = userVars.units === "metric" ? metricPlates : imperialPlates,
+          platesToLoad     = []
+        ;
+    let   weightSingleSide = (liftWeight - barBellWeight) / 2,
+          plateIndex       = 0
+        ;
 
-    if (userVars.units === "metric") {
-      plates = botVars.metricPlateConfig;
-    } else {
-      plates = botVars.imperialPlateConfig;
-    }
-
-    let plateIndex = 0;
-    let platesToLoad = [];
-    let formattedPlateCount = [];
       
-    while(plateWeightSingleSide >= .25) {
-      let plateType   = Object.keys(plates[plateIndex]);
-      let plateWeight = plates[plateIndex][plateType];
+    while(weightSingleSide >= .25) {
+      let plateIdx    = plates[plateIndex],
+          plateType   = Object.keys(plateIdx),
+          plateWeight = plateIdx[plateType]
+        ;
       
-      if((plateWeightSingleSide - plateWeight) >= 0) {
+      if((weightSingleSide - plateWeight) >= 0) {
         platesToLoad.push(plateType);
-        plateWeightSingleSide -= plateWeight;
-      } else if (plateWeightSingleSide <= minimumRemainingWeight) {
+        weightSingleSide -= plateWeight;
+      } else if (weightSingleSide <= minimumRemainingWeight) {
         break;
       } else {
         Math.min(plateIndex++, plates.length);
@@ -86,16 +93,17 @@ function calculateLifts() {
       return prev;
     }, {});
 
-    for(let plate in plateCount) {
-      const theCount = plateCount[plate];
-      formattedPlateCount.push(`${theCount} ${plate} ${theCount > 1 ? "s" : ""}`);
-    }
-
-    if(!formattedPlateCount.length) {
-      formattedPlateCount.push("<= Bar Weight")
-    }
-
-    return formattedPlateCount.join(', ');
+    return Object.keys(plateCount)
+          .map(type => {
+            const countType = plateCount[type];
+            return `${
+              countType.length 
+               ? "<= Bar Weight"
+               : `${countType} ${type}${pluralize(countType)}`
+             }`
+          })
+          .join(', ')
+          ;
   }
   
       /**
@@ -104,26 +112,15 @@ function calculateLifts() {
    * 
    * @return {string} formatted percent string
    */
-  function decimalPercent(decimal) {
-    let string = ((decimal * 100) + "%");
+  function convertDecimalToStringPercent(decimal) {
+    var string = ((decimal * 100) + "%");
     return string.substr(0, 4);
   }
 
-  // TODO ---- SHOULD CHANGE THIS TO A Array.prototype.map()
-  for (let i = 0; i < commonLiftPercentage.length; i++) {
-    const theLiftPercentage = commonLiftPercentage[i];
-    readableLifts.push(
-      `
-      ${decimalPercent(theLiftPercentage)} 
-      ${calculatedLiftPercents[i]} 
-      ${botVars.unitShrt[userVars.units]} 
-      ${platesToLoad[i]} \n"
-      `
-    );
-  }
-
-  return readableLifts.join(' ');
+  return commonLiftPercentage.map((liftPercent, i) => {
+    return `${convertDecimalToStringPercent(liftPercent)} ${calculatedLiftPercents[i]}${userVars.units === "metric" ? "kgs " : "lbs "} -> ${platesToLoad[i]}`;
+  });
 }
-
-
+// calculateLifts();
+console.log(calculateLifts());
 module.exports = calculateLifts;
