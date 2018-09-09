@@ -37,9 +37,7 @@ function convertAllMaxLifts() {
     });
   
   rs.setUservar(cu, 'units', userVars.units === 'metric' ? 'imperial' : 'metric');
-  return rs.reply(cu, 'maxlifts');
+  return `converted all max lifts to`;
 }
-
-console.log(convertAllMaxLifts());
 
 module.exports = convertAllMaxLifts;

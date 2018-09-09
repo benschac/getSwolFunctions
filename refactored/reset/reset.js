@@ -8,7 +8,7 @@ const rs = require('../../mockUser');
 function resetBotUserVars() {
   const userVars = rs.getUservars(rs.currentUser());
   Object.keys(userVars).forEach(userVar => {
-    rs.setUservar(rs.currentUser(), userVar, undefined);
+    rs.setUservar(rs.currentUser(), userVar, null);
   });
 
   return 'your inputted data has been reset, this cannot be undone'

@@ -5,6 +5,6 @@ const rs                 = require('../../mockUser'),
 
 describe('convertAllMaxLifts', () => {
   it('should trigger maxlifts', () => {
-    expect(convertAllMaxLifts()).toBe('maxlifts');
+    expect(convertAllMaxLifts()).toBe('converted all max lifts to');
   });
 });

@@ -20,7 +20,7 @@ const rs = require('../../mockUser'),
  */
 function calculateLifts() {
 
-    /**
+  /**
    * Start RiveScript | Boiler Plate
    */
   const cu                       = rs.currentUser(),
@@ -31,20 +31,17 @@ function calculateLifts() {
         liftType                 = userVars.currentLift,
         maxLift                  = userVars[liftType],
         barBellConfiguration     = {"male": {"metric": 20, "imperial": 44}, "female": {"metric": 15, "imperial": 33}},
-        minRemainingWeightConfig = {"metric": .5, "imperial": 1.5},
+        minRemainingWeightConfig = {"metric": .5, "imperial": 0.6},
         minimumRemainingWeight   = minRemainingWeightConfig[userVars.units],
         barBellWeight            = barBellConfiguration[userVars.gender][userVars.units],
         metricPlates             = [{"Large Red": 25}, {"Large Blue": 20}, {"Large Yellow": 15}, {"Large Green": 10}, {"Large White": 5}, {"Small Red": 2.5}, {"Small Blue": 2}, {"Small Yellow": 1.5}, {"Small Green": 1}, {"Small White": .5}],
-        imperialPlates           = [{"45": 45}, {"35": 35}, {"25": 25}, {"10": 10}, {"5": 5}, {"2.5": 2.5}, {"1.25": 1.25}]
+        imperialPlates           = [{"45": 45}, {"35": 35}, {"25": 25}, {"10": 10}, {"5": 5}, {"2.5": 2.5}, {"1.25": 1.25}, {"1": 1}, {"0.5": 0.5}]
       ;
   
   let   commonLiftPercentage     = [.30, .35, .40, .45, .50, .55, .60, .65, .70, .75, .80, .85, .90, .95],
         calculatedLiftPercents   = commonLiftPercentage.map(percent => (Math.round((maxLift * percent) * 10 ) / 10)),
         platesToLoad             = calculatedLiftPercents.map(getPlates)
       ;
-
-// ugly -- not I have some weird bug in my mapping function i need to fix l8r
-  //var readableLifts = [];
 
   /**
    * Append 's' if needed
@@ -53,6 +50,27 @@ function calculateLifts() {
    */
   function pluralize(count) {
     return (count > 1 ? "s" : "");
+  }
+
+  /**
+   * 
+   * @param {string} units (metric|imperial)
+   * 
+   * @return {string} shorthand unit
+   */
+  function short(units) {
+    return units === "metric" ? "kgs" : "lbs"
+  }
+
+  /**
+   * 
+   * @param {float} decimal to convert
+   * 
+   * @return {string} formatted percent string
+   */
+  function convertDecimalToStringPercent(decimal) {
+    let string = (Math.round(decimal * 100) + "%");
+    return string.substr(0, 4);
   }
 
   
@@ -68,7 +86,8 @@ function calculateLifts() {
           platesToLoad     = []
         ;
     let   weightSingleSide = (liftWeight - barBellWeight) / 2,
-          plateIndex       = 0
+          plateIndex       = 0,
+          plateItorator
         ;
 
       
@@ -93,34 +112,38 @@ function calculateLifts() {
       return prev;
     }, {});
 
-    return Object.keys(plateCount)
-          .map(type => {
-            const countType = plateCount[type];
-            return `${
-              countType.length 
-               ? "<= Bar Weight"
-               : `${countType} ${type}${pluralize(countType)}`
-             }`
-          })
-          .join(', ')
-          ;
+    if (userVars.units === 'imperial') {
+      plateItorator = Object
+        .keys(plateCount)
+        .map(amount => Number(amount))
+        .sort((a, b) => b > a);
+    } else {
+      plateItorator = Object.keys(plateCount);
+    }
+
+    return plateItorator
+            .map(type => {
+              const countType = plateCount[type];
+              return `${
+                `${countType} ${type}${pluralize(countType)} \n`
+              }`
+            })
+            .join(' ')
+            ;
   }
   
-      /**
-   * 
-   * @param {float} decimal to convert
-   * 
-   * @return {string} formatted percent string
-   */
-  function convertDecimalToStringPercent(decimal) {
-    var string = ((decimal * 100) + "%");
-    return string.substr(0, 4);
-  }
-
-  return commonLiftPercentage.map((liftPercent, i) => {
-    return `${convertDecimalToStringPercent(liftPercent)} ${calculatedLiftPercents[i]}${userVars.units === "metric" ? "kgs " : "lbs "} -> ${platesToLoad[i]}`;
-  });
+  return commonLiftPercentage.map(
+    (liftPercent, i) => 
+    `\
+    <--${convertDecimalToStringPercent(liftPercent)} -- ${calculatedLiftPercents[i]}${short(userVars.units)}-->\
+    \n ${
+      platesToLoad[i] 
+        ? platesToLoad[i] 
+        : 'Less Than Bar Weight'
+      } \n
+    `
+  ).join(' ');
 }
-// calculateLifts();
+
 console.log(calculateLifts());
 module.exports = calculateLifts;

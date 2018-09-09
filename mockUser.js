@@ -13,7 +13,8 @@ const users = [
         name: "Benjamin Schachter",
         userVars: {
           currentLift: "deadlift",
-          "deadlift": "221",
+          "quickConvertUnits": "metric",
+          "deadlift": "95.5",
           "benchpress": "185",
           "backsquat": "195",
           "frontsquat": "160",
@@ -32,6 +33,7 @@ const users = [
         name: "Rebecca Cohen",
         userVars: {
           currentLift: "deadlift",
+          "quickConvertUnits": "metric",
           "deadlift": "221",
           "benchpress": "185",
           "backsquat": "195",
@@ -71,14 +73,18 @@ const botUserVariables = {
  * Bot wide variables
  */
 const botBrainVars = {
- toKilos: 0.453592,
- toPounds: 2.20462,
- lifts: 'deadlift, benchpress, backsquat, frontsquat, overheadsquat, snatch, clean and jerk, overhead press, hangclean',
- barBellConfig: '{"male": {"metric": 20, "imperial": 44}, "female": {"metric": 15, "imperial": 33}}',
- metricPlateConfig: '[{"Large Red": 25}, {"Large Blue": 20}, {"Large Yellow": 15}, {"Large Green": 10}, {"Large White": 5}, {"Small Red": 2.5}, {"Small Blue": 2}, {"Small Yellow": 1.5}, {"Small Green": 1}, {"Small White": .5}]',
- imperialPlateConfig: '[{"45": 45}, {"35": 35}, {"25": 25}, {"10": 10}, {"5": 5}, {"2.5": 2.5}, {"1.25": 1.25}]',
- unitShrt: {metric: 'kgs', imperial: 'lbs'},
- unitLng: {metric: 'kilos', imperial: 'pounds'}
+  toKilos: 0.453592,
+  toPounds: 2.20462,
+  kgMaleBar: 20,
+  lbMaleBar: 44,
+  kgFemaleBar: 15,
+  lbFemaleBar: 33,
+  lifts: 'deadlift, benchpress, backsquat, frontsquat, overheadsquat, snatch, clean and jerk, overhead press, hangclean',
+  barBellConfig: '{"male": {"metric": 20, "imperial": 44}, "female": {"metric": 15, "imperial": 33}}',
+  metricPlateConfig: '[{"Large Red": 25}, {"Large Blue": 20}, {"Large Yellow": 15}, {"Large Green": 10}, {"Large White": 5}, {"Small Red": 2.5}, {"Small Blue": 2}, {"Small Yellow": 1.5}, {"Small Green": 1}, {"Small White": .5}]',
+  imperialPlateConfig: '[{"45": 45}, {"35": 35}, {"25": 25}, {"10": 10}, {"5": 5}, {"2.5": 2.5}, {"1.25": 1.25}]',
+  unitShrt: {metric: 'kgs', imperial: 'lbs'},
+  unitLng: {metric: 'kilos', imperial: 'pounds'}
 }
     
 

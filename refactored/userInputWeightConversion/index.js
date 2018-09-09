@@ -16,7 +16,8 @@ function weightConversion() {
   const cu        = rs.currentUser(),
         botVars   = rs.getBotvars(),
         userVars  = rs.getUservars(cu),
-        toConvert = _.get(arguments,'0', false) || userVars[userVars.currentLift]
+        userInput = _.get(arguments,'0', false),
+        toConvert = userInput || userVars[userVars.currentLift]
         ;
   
   if(!Number(toConvert)) {
@@ -30,9 +31,22 @@ function weightConversion() {
    * End RiveScript | Boiler Plate
    */
 
-   return userVars.units === 'imperial'
-   ? `${String(Math.round(botVars.toKilos * toConvert))}kg`
-   : `${String(Math.round(botVars.toPounds * toConvert))}lb`
+   /**
+    * 
+    * @param {string} unit (imperial | metric)
+    * 
+    * @return {string} converted amount
+    */
+   function convertWeight(unit) {
+    return unit === 'imperial'
+    ? `${String(Math.round(botVars.toKilos * toConvert))}kg`
+    : `${String(Math.round(botVars.toPounds * toConvert))}lb`
+   }
+  
+   return userInput 
+    ? convertWeight(userVars.quickConvertUnits)
+    : convertWeight(userVars.units)
+    ;
 };
 
 module.exports = weightConversion;

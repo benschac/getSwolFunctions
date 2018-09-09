@@ -1,19 +1,35 @@
 const rs                                  = require('../../mockUser'),
-      userInputWeightConversionCalculator = require('./index'),
+      weightConversionCalculator = require('./index'),
       reset                               = require('../reset/reset.js');
       ;
 
 
 describe('user input weight unit conversion reject', () => {
   it('should reject strings', () => {
-    expect(userInputWeightConversionCalculator('heya friend')).toBe('invalidinput');
+    expect(weightConversionCalculator('heya friend')).toBe('invalidinput');
   });
 
   it('should reject values less than 0', () => {
-    expect(userInputWeightConversionCalculator('0')).toBe('invalidinput');
-    expect(userInputWeightConversionCalculator('-50')).toBe('invalidinput');
+    expect(weightConversionCalculator('0')).toBe('invalidinput');
+    expect(weightConversionCalculator('-50')).toBe('invalidinput');
   });
 });
+
+describe('should round floats kg -> lb and let the user know', () => {
+  beforeAll(() => {
+    rs.setUservar(rs.currentUser(), 'units', 'metric');
+  });
+
+  expect(weightConversionCalculator('56.4')).toBe('124lb');
+});
+
+// describe('should round floats lb -> kg and let the user know', () => {
+//   beforeAll(() => {
+//     rs.setUservar(rs.currentUser(), 'units', 'imperial');
+//   });
+
+//   expect(weightConversionCalculator('124')).toBe('56');
+// });
 
 describe('default state', () => {
   beforeAll(() => {
@@ -21,7 +37,7 @@ describe('default state', () => {
   });
 
   it('should be kg -> lbs if not set', () => {
-    expect(userInputWeightConversionCalculator('45')).toBe('99lb');
+    expect(weightConversionCalculator('45')).toBe('99lb');
   })
 });
 
@@ -29,13 +45,12 @@ describe('user input weight conversion kg -> lbs', () => {
   beforeAll(() => {
     // Set user variables to metric
     rs.getUservars(rs.currentUser());
-    rs.setUservar(rs.currentUser(), 'units', 'metric');
-  });
+    rs.setUservar(rs.currentUser(), 'quickConvertUnits', 'metric');  });
 
   it('should convert whole number kilograms to pounds', () => {
-    expect(userInputWeightConversionCalculator('45')).toBe('99lb');
-    expect(userInputWeightConversionCalculator('100')).toBe('220lb');
-    expect(userInputWeightConversionCalculator('75')).toBe('165lb');
+    expect(weightConversionCalculator('45')).toBe('99lb');
+    expect(weightConversionCalculator('100')).toBe('220lb');
+    expect(weightConversionCalculator('75')).toBe('165lb');
   });
 
   afterAll(() => {
@@ -49,18 +64,18 @@ describe('user input weight conversion lbs -> kgs', () => {
   beforeAll(() => {
     // Set user variables to imperial
     rs.getUservars(rs.currentUser());
-    rs.setUservar(rs.currentUser(), 'units', 'imperial');
+    rs.setUservar(rs.currentUser(), 'quickConvertUnits', 'imperial');
   });
 
 
   it('should convert whole number pounds to kilos', () => {
-    expect(userInputWeightConversionCalculator('100')).toBe('45kg');
-    expect(userInputWeightConversionCalculator('200')).toBe('91kg');
-    expect(userInputWeightConversionCalculator('221')).toBe('100kg');
-    expect(userInputWeightConversionCalculator('245')).toBe('111kg');
+    expect(weightConversionCalculator('100')).toBe('45kg');
+    expect(weightConversionCalculator('200')).toBe('91kg');
+    expect(weightConversionCalculator('221')).toBe('100kg');
+    expect(weightConversionCalculator('245')).toBe('111kg');
   });
 });
 
 describe('can use botUser variable currentLift to convert units', () => {
-  expect(userInputWeightConversionCalculator()).toBe('100kg');
+  expect(weightConversionCalculator()).toBe("487lb");
 })

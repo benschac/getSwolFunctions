@@ -28,11 +28,12 @@ function getAllMaxLifts() {
   
   return botVars.lifts.split(', ')
           .map(lift => 
-          `${lift} -> ${_.get(userVars, [lift], "no maxlift yet")} \n`)
+          `${lift} -> ${_.get(userVars, [lift], "no max lift")} \n`)
           .join("")
           .concat(`All lifts are in ${
             userVars.units === 'metric' ? 'kilos' : 'pounds'
-          }`);
+          }\n \nhit that hammy(burger) button in the corner if you want to get back to the main menu`)
+          ;
 }
 
 
