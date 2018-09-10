@@ -14,7 +14,7 @@ const users = [
         userVars: {
           currentLift: "deadlift",
           "quickConvertUnits": "metric",
-          "deadlift": "95.5",
+          "deadlift": "91",
           "benchpress": "185",
           "backsquat": "195",
           "frontsquat": "160",
@@ -34,7 +34,7 @@ const users = [
         userVars: {
           currentLift: "deadlift",
           "quickConvertUnits": "metric",
-          "deadlift": "221",
+          "deadlift": "91",
           "benchpress": "185",
           "backsquat": "195",
           "frontsquat": "160",
@@ -43,7 +43,6 @@ const users = [
           "clean and jerk": "100",
           "overhead press": "100",
           "hangclean": "100",
-          "units": "imperial",
           "gender": "male",
           units: "metric",
           gender: "female"

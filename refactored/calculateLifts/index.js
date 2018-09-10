@@ -31,7 +31,7 @@ function calculateLifts() {
         liftType                 = userVars.currentLift,
         maxLift                  = userVars[liftType],
         barBellConfiguration     = {"male": {"metric": 20, "imperial": 44}, "female": {"metric": 15, "imperial": 33}},
-        minRemainingWeightConfig = {"metric": .5, "imperial": 0.6},
+        minRemainingWeightConfig = {"metric": .4, "imperial": 0.6},
         minimumRemainingWeight   = minRemainingWeightConfig[userVars.units],
         barBellWeight            = barBellConfiguration[userVars.gender][userVars.units],
         metricPlates             = [{"Large Red": 25}, {"Large Blue": 20}, {"Large Yellow": 15}, {"Large Green": 10}, {"Large White": 5}, {"Small Red": 2.5}, {"Small Blue": 2}, {"Small Yellow": 1.5}, {"Small Green": 1}, {"Small White": .5}],
@@ -39,10 +39,10 @@ function calculateLifts() {
       ;
   
   let   commonLiftPercentage     = [.30, .35, .40, .45, .50, .55, .60, .65, .70, .75, .80, .85, .90, .95],
-        calculatedLiftPercents   = commonLiftPercentage.map(percent => (Math.round((maxLift * percent) * 10 ) / 10)),
+        calculatedLiftPercents   = commonLiftPercentage.map(percent => Math.round(maxLift * percent)),
         platesToLoad             = calculatedLiftPercents.map(getPlates)
       ;
-
+  // console.log(calculatedLiftPercents, maxLift);
   /**
    * Append 's' if needed
    * 
@@ -112,13 +112,12 @@ function calculateLifts() {
       return prev;
     }, {});
 
+    plateItorator = Object.keys(plateCount);
+
     if (userVars.units === 'imperial') {
-      plateItorator = Object
-        .keys(plateCount)
-        .map(amount => Number(amount))
+      plateItorator = plateItorator
+        .map(Number)
         .sort((a, b) => b > a);
-    } else {
-      plateItorator = Object.keys(plateCount);
     }
 
     return plateItorator

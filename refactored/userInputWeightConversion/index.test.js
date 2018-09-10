@@ -33,7 +33,7 @@ describe('should round floats kg -> lb and let the user know', () => {
 
 describe('default state', () => {
   beforeAll(() => {
-    rs.setUservar(rs.currentUser(), 'units', undefined);
+    rs.setUservar(rs.currentUser(), 'units', 'metric');
   });
 
   it('should be kg -> lbs if not set', () => {
@@ -73,6 +73,10 @@ describe('user input weight conversion lbs -> kgs', () => {
     expect(weightConversionCalculator('200')).toBe('91kg');
     expect(weightConversionCalculator('221')).toBe('100kg');
     expect(weightConversionCalculator('245')).toBe('111kg');
+  });
+
+  afterAll(() => {
+    rs.setUservar(rs.currentUser(), 'units', 'metric');
   });
 });
 
