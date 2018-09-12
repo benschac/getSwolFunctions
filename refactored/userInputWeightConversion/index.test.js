@@ -1,6 +1,7 @@
 const rs                                  = require('../../mockUser'),
       weightConversionCalculator = require('./index'),
-      reset                               = require('../reset/reset.js');
+      reset                               = require('../reset/reset.js'),
+      userInputWeightConversion           = require('../userInputWeightConversion/index.js')
       ;
 
 
@@ -81,5 +82,10 @@ describe('user input weight conversion lbs -> kgs', () => {
 });
 
 describe('can use botUser variable currentLift to convert units', () => {
-  expect(weightConversionCalculator()).toBe("487lb");
+  const userVars          = rs.getUservars(rs.currentUser()),
+        currentLiftWeight = userVars['currentLift'],
+        newWeight         = userInputWeightConversion(Number(currentLiftWeight))
+      ;
+
+  expect(weightConversionCalculator()).toBe(newWeight);
 })
